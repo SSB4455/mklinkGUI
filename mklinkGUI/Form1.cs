@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Ookii.Dialogs.WinForms;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -15,27 +16,31 @@ namespace mklinkGUI
 
 		private void button1_Click(object sender, EventArgs e)
 		{
-			using (FolderBrowserDialog dlg = new FolderBrowserDialog())
+			VistaFolderBrowserDialog folderBrowserDialog = new VistaFolderBrowserDialog();
+			folderBrowserDialog.Description = "选择源目录";
+			folderBrowserDialog.UseDescriptionForTitle = true;
+
+			if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
 			{
-				dlg.Description = "选择源目录";
-				if (dlg.ShowDialog() == DialogResult.OK)
-				{
-					//MessageBox.Show("You selected: " + dlg.SelectedPath);
-					textBox1.Text = dlg.SelectedPath;
-				}
+				string selectedFolder = folderBrowserDialog.SelectedPath;
+				//MessageBox.Show("您选择的网络文件夹是：" + selectedFolder);
+				// 在这里使用 selectedFolder，进行您需要的操作
+				textBox1.Text = selectedFolder;
 			}
 		}
 
 		private void button2_Click(object sender, EventArgs e)
 		{
-			using (FolderBrowserDialog dlg = new FolderBrowserDialog())
+			VistaFolderBrowserDialog folderBrowserDialog = new VistaFolderBrowserDialog();
+			folderBrowserDialog.Description = "选择要映射到的本地目录";
+			folderBrowserDialog.UseDescriptionForTitle = true;
+
+			if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
 			{
-				dlg.Description = "选择要映射到的本地目录";
-				if (dlg.ShowDialog() == DialogResult.OK)
-				{
-					//MessageBox.Show("You selected: " + dlg.SelectedPath);
-					textBox2.Text = dlg.SelectedPath;
-				}
+				string selectedFolder = folderBrowserDialog.SelectedPath;
+				//MessageBox.Show("You selected: " + selectedFolder);
+				// 在这里使用 selectedFolder，进行您需要的操作
+				textBox2.Text = selectedFolder;
 			}
 		}
 
@@ -58,7 +63,7 @@ namespace mklinkGUI
 
 		private void button4_Click(object sender, EventArgs e)
 		{
-			//label3.Text = SplitCmdCurrentPath(RunCmd("mklink /d E:\\test22 E:\\Users"));
+			//label3.Text = RunCmd("mklink /d E:\\test22 E:\\Users");
 			if (!Directory.Exists(textBox1.Text))
 			{
 				MessageBox.Show("“" + textBox1.Text + "”目录不存在");
