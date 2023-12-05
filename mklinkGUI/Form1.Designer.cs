@@ -65,16 +65,16 @@
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(41, 12);
 			this.label1.TabIndex = 2;
-			this.label1.Text = "source";
+			this.label1.Text = "源目录";
 			// 
 			// label2
 			// 
 			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(23, 92);
+			this.label2.Location = new System.Drawing.Point(11, 92);
 			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(41, 12);
+			this.label2.Size = new System.Drawing.Size(53, 12);
 			this.label2.TabIndex = 3;
-			this.label2.Text = "target";
+			this.label2.Text = "本地目录";
 			// 
 			// button2
 			// 

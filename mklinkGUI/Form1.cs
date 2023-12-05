@@ -58,7 +58,7 @@ namespace mklinkGUI
 			}
 			string dirName = new DirectoryInfo(textBox1.Text).Name;
 			string output = RunCmd("mklink /d " + textBox2.Text + Path.DirectorySeparatorChar + dirName + " " + textBox1.Text);
-			label3.Text = SplitCmdCurrentPath(output);
+			label3.Text = output;
 		}
 
 		private void button4_Click(object sender, EventArgs e)
@@ -76,7 +76,7 @@ namespace mklinkGUI
 			}
 			string dirName = new DirectoryInfo(textBox1.Text).Name;
 			string output = RunCmd("mklink /j " + textBox2.Text + Path.DirectorySeparatorChar + dirName + " " + textBox1.Text);
-			label3.Text = SplitCmdCurrentPath(output);
+			label3.Text = output;
 		}
 
 		string RunCmd(string cmd)
@@ -95,28 +95,41 @@ namespace mklinkGUI
 			//process.StartInfo.CreateNoWindow = true;
 			//process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
 
+			//string output = "";
+
 			// 开始运行进程
 			process.Start();
+
+			/*process.BeginOutputReadLine();
+			process.BeginErrorReadLine();
+			process.OutputDataReceived += (sender, args) =>
+			{
+				Console.WriteLine("OutputDataReceived: " + args.Data);
+				output += "\n" + args.Data;
+			};
+			process.ErrorDataReceived += (sender, args) =>
+			{
+				Console.WriteLine("ErrorDataReceived: " + args.Data);
+				output += "\n" + args.Data;
+			};*/
+
 			process.StandardInput.WriteLine(cmd);
 			process.StandardInput.AutoFlush = true;
-			process.StandardInput.Flush();
-			//Console.WriteLine("--" + process.StandardOutput.ReadToEnd() + "||");
-			string output = process.StandardOutput.ReadToEnd();
-			Console.WriteLine("--" + output + "||");
-			//output = process.StandardOutput.ReadToEnd();
+			//process.StandardInput.Flush();
 			process.StandardInput.WriteLine("exit");
-			process.StandardInput.Flush();
+			//process.StandardInput.Flush();
 
 			// 获取输出信息
-			//Console.WriteLine("--" + process.StandardOutput.ReadToEnd() + "||");
-			//Console.WriteLine("--" + output + "||");
+			string output = process.StandardOutput.ReadToEnd();
+			Console.WriteLine("output: " + output);
+			string error = process.StandardError.ReadToEnd();
+			Console.WriteLine("error:" + error);
+
 			// 等待进程结束
 			process.WaitForExit();
-			//output = process.StandardOutput.ReadToEnd();
-			//Console.WriteLine("--" + output + "||");
 			process.Close();
-			//return "output";
-			return output;
+
+			return SplitCmdCurrentPath(output) + error;
 		}
 
 		string SplitCmdCurrentPath(string output)
