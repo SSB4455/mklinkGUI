@@ -31,52 +31,26 @@ namespace mklinkGUI
 
 		private void button2_Click(object sender, EventArgs e)
 		{
-			VistaFolderBrowserDialog folderBrowserDialog = new VistaFolderBrowserDialog();
+			FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
 			folderBrowserDialog.Description = "选择要映射到的本地目录";
-			folderBrowserDialog.UseDescriptionForTitle = true;
+			folderBrowserDialog.RootFolder = Environment.SpecialFolder.MyComputer;
 
 			if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
 			{
 				string selectedFolder = folderBrowserDialog.SelectedPath;
 				//MessageBox.Show("You selected: " + selectedFolder);
-				// 在这里使用 selectedFolder，进行您需要的操作
 				textBox2.Text = selectedFolder;
-			}
-		}
 
-		private void button3_Click(object sender, EventArgs e)
-		{
-			if (!Directory.Exists(textBox1.Text))
-			{
-				MessageBox.Show("“" + textBox1.Text + "”目录不存在");
-				return;
+				if (!Directory.Exists(selectedFolder))
+				{
+					MessageBox.Show("“" + selectedFolder + "”目录不存在");
+					return;
+				}
+				string targetFolder = selectedFolder + Path.DirectorySeparatorChar + new DirectoryInfo(textBox1.Text).Name;
+				string output = RunCmd("mklink /d " + targetFolder + " " + textBox1.Text);
+				label3.Text = output;
+				Process.Start(targetFolder);
 			}
-			if (!Directory.Exists(textBox2.Text))
-			{
-				MessageBox.Show("“" + textBox2.Text + "”目录不存在");
-				return;
-			}
-			string dirName = new DirectoryInfo(textBox1.Text).Name;
-			string output = RunCmd("mklink /d " + textBox2.Text + Path.DirectorySeparatorChar + dirName + " " + textBox1.Text);
-			label3.Text = output;
-		}
-
-		private void button4_Click(object sender, EventArgs e)
-		{
-			//label3.Text = RunCmd("mklink /d E:\\test22 E:\\Users");
-			if (!Directory.Exists(textBox1.Text))
-			{
-				MessageBox.Show("“" + textBox1.Text + "”目录不存在");
-				return;
-			}
-			if (!Directory.Exists(textBox2.Text))
-			{
-				MessageBox.Show("“" + textBox2.Text + "”目录不存在");
-				return;
-			}
-			string dirName = new DirectoryInfo(textBox1.Text).Name;
-			string output = RunCmd("mklink /j " + textBox2.Text + Path.DirectorySeparatorChar + dirName + " " + textBox1.Text);
-			label3.Text = output;
 		}
 
 		string RunCmd(string cmd)
