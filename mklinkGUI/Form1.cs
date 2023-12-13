@@ -9,10 +9,6 @@ namespace mklinkGUI
 {
 	public partial class Form1 : Form
 	{
-		string sourceFolder = "";
-
-
-
 		public Form1()
 		{
 			InitializeComponent();
@@ -20,36 +16,22 @@ namespace mklinkGUI
 
 		private void button1_Click(object sender, EventArgs e)
 		{
-			VistaFolderBrowserDialog folderBrowserDialog = new VistaFolderBrowserDialog();
-			folderBrowserDialog.Description = "选择源目录";
-			folderBrowserDialog.UseDescriptionForTitle = true;
-
-			if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+			Button button = sender as Button;
+			if (button != null)
 			{
-				sourceFolder = folderBrowserDialog.SelectedPath;
-				//MessageBox.Show("您选择的网络文件夹是：" + selectedFolder);
-				// 在这里使用 selectedFolder，进行您需要的操作
-				textBox1.Text = sourceFolder;
-			}
-		}
-
-		private void radioButton1_CheckedChanged(object sender, EventArgs e)
-		{
-			RadioButton radioButton = sender as RadioButton;
-			if (radioButton != null && radioButton.Checked)
-			{
-				sourceFolder = @"\\" + radioButton.Text + Path.DirectorySeparatorChar;
-
 				VistaFolderBrowserDialog folderBrowserDialog = new VistaFolderBrowserDialog();
 				folderBrowserDialog.Reset();
 				folderBrowserDialog.Description = "选择源目录";
 				folderBrowserDialog.UseDescriptionForTitle = true;
-				folderBrowserDialog.SelectedPath = sourceFolder;
+				folderBrowserDialog.SelectedPath = @"\\" + button.Text + Path.DirectorySeparatorChar;
 
 				if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
 				{
-					sourceFolder = folderBrowserDialog.SelectedPath;
+					string selectedFolder = folderBrowserDialog.SelectedPath;
 					//MessageBox.Show("您选择的网络文件夹是：" + selectedFolder);
+					Console.WriteLine("selectedFolder: " + selectedFolder);
+
+					LinkCmd2(selectedFolder);
 				}
 			}
 		}
@@ -58,17 +40,16 @@ namespace mklinkGUI
 		{
 			if (e.KeyCode == Keys.Enter)
 			{
-				radioButton5.Checked = false;
-				radioButton5.Checked = true;
+				LinkCmd2(textBox1.Text);
 			}
 		}
 
-		private void radioButton5_CheckedChanged(object sender, EventArgs e)
+		private void button5_Click(object sender, EventArgs e)
 		{
-			sourceFolder = textBox1.Text;
+			LinkCmd2(textBox1.Text);
 		}
 
-		private void button2_Click(object sender, EventArgs e)
+		private void LinkCmd2(string sourceFolder)
 		{
 			if (string.IsNullOrEmpty(sourceFolder))
 			{
@@ -131,6 +112,7 @@ namespace mklinkGUI
 
 		string RunCmd(string cmd)
 		{
+			Console.WriteLine("RunCmd: " + cmd);
 			// 创建进程对象并设置要运行的命令及参数
 			Process process = new Process();
 			process.StartInfo.FileName = "cmd.exe";   // 指定要运行的命令为 cmd.exe（Windows 系统）或者 bash（Linux/MacOS 系统）
