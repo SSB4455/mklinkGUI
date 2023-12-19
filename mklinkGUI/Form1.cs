@@ -1,8 +1,9 @@
-﻿using Ookii.Dialogs.WinForms;
+using Ookii.Dialogs.WinForms;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace mklinkGUI
@@ -25,6 +26,10 @@ namespace mklinkGUI
 				folderBrowserDialog.UseDescriptionForTitle = true;
 				folderBrowserDialog.SelectedPath = @"\\" + button.Text + Path.DirectorySeparatorChar;
 
+				// 创建一个新的线程来发送按键
+				Thread keyPressThread = new Thread(new ThreadStart(SendEnterKey));
+				keyPressThread.Start();
+				
 				if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
 				{
 					string selectedFolder = folderBrowserDialog.SelectedPath;
@@ -171,6 +176,13 @@ namespace mklinkGUI
 			int index1 = output.IndexOf(path, 0) + path.Length;
 			int index2 = output.IndexOf(path, index1);
 			return output.Substring(index1, index2 - index1);
+		}
+
+		private void SendEnterKey()
+		{
+			// 等待一段时间后发送 Enter 键
+			Thread.Sleep(100);
+			SendKeys.SendWait("{ENTER}");
 		}
 	}
 }
